@@ -1,0 +1,59 @@
+define Variable {
+    attrName: '',
+    attrValue: '',
+    constructor : function(name, value, state){
+        this.attrName = name;
+        this.attrValue = value;
+        this.state = state;
+    }
+}
+
+
+rule 'descSepecialChars' {
+    //salience: 1;
+    when {
+        product :  Variable product.attrName in ['product', 'sel1', 'suffix'] && product.attrValue != null;
+        //Variable inutJson.descriptionList[0].descType == 'product';
+    }
+    then {
+        console.log('descSepecialChars.. : '+product.attrName  + ' ::: ' +product.attrValue);
+        var permittedChars = '^a-zA-Z0-9&!%,.()+\'\/\\-*\"?\\t\\r\\n ';
+        permittedChars = '[' + permittedChars + ']';
+
+        var flags = 'ig';
+        var strFilterRegEx = new RegExp(permittedChars, flags);
+        var res = product.attrValue.match(strFilterRegEx);
+        console.log(res);
+    }
+}
+
+/*
+rule 'toUpperCase' {
+    //salience: 1;
+    when {
+        desc : Variable desc.name == 'description' && desc.state == undefined;
+    }
+    then {
+        console.log('toUpperCase Description');
+        modify(desc, function(){
+            this.value = desc.value.toUpperCase();
+            this.state = 'toLowerCase';
+        });        
+    }
+}
+
+
+rule 'toLowerCase' {
+    //salience: 2;
+    when {
+        desc : Variable desc.name == 'description' && desc.state == 'toLowerCase';
+    }
+    then {
+        console.log('toLowerCase Description');
+        modify(desc, function(){
+            this.value = desc.value[0].toLowerCase() + desc.value.slice(1);
+            this.state = 'none'
+        });
+    }
+}
+*/
